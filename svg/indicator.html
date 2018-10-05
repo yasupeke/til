@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>indicator</title>
+  <style>
+    .indicator {
+      display: inline-block;
+      width: 64px;
+      height: 64px;
+      background-color: #EAEAEA;
+      border-radius: 50%;
+    }
+
+    .indicator + indicator {
+      margin-right: 8px;
+    }
+
+    .indicator.full .meter {
+      fill: #EA788B;
+    }
+
+    .indicator .meter {
+      fill: #89C8BA;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <div class="indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <polygon id="i1" class="meter" />
+      </svg>
+    </div>
+
+    <div class="indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <polygon id="i2" class="meter" />
+      </svg>
+    </div>
+
+    <div class="indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <polygon id="i3" class="meter" />
+      </svg>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const VERTICES = 100;
+      const CENTER = 32;
+
+      const i1 = document.querySelector('#i1');
+      i1.setAttribute('points', getPoints(10));
+
+      const i2 = document.querySelector('#i2');
+      i2.setAttribute('points', getPoints(40));
+
+      const i3 = document.querySelector('#i3');
+      i3.setAttribute('points', getPoints(80));
+
+      function getPoints(percent) {
+        let points = '';
+        const radius = -CENTER;
+        percent = percent > VERTICES ? VERTICES : percent < 0 ? 0 : percent;
+        for (let i = 0; i < percent; ++i) {
+          const angle = ((Math.PI * 2) / VERTICES) * i;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          let tx = CENTER;
+          let ty = CENTER;
+          if (i + 1 < percent || percent === 100) {
+            tx = 0 * cos - radius * sin + CENTER;
+            ty = 0 * sin + radius * cos + CENTER;
+          }
+
+          points += `${Math.round(tx)},${Math.round(ty)} `;
+        }
+        return points;
+      }
+    })();
+
+  </script>
+</body>
+</html>
